@@ -53,7 +53,7 @@ public class PerformanceService extends Service {
     public static OutputStreamWriter osw;
     private static final String BLANK_STRING = "";
     private int index = 0;
-    public String test_case;
+    public String test_case, case_des;
     private ActivityManager am;
     private String processCpu, traffic;
     public String totalBatt, temperature;
@@ -79,9 +79,9 @@ public class PerformanceService extends Service {
         heapState = preferences.getBoolean(Settings.KEY_HEAP_STATE, false);
         package_name = preferences.getString(Settings.KEY_PACKAGE, Constants.DEFAULT_PACKAGE).split(":")[1];
         test_case = preferences.getString(Settings.KEY_CASE, Constants.PERFORMANCE);
+        case_des = preferences.getString(Constants.CASE_DES, "null");
 //        Programe programe = new ProcessInfo().getProgrameByPackageName(getApplicationContext(), package_name);
 //        if(programe.getPid() != 0){
-//
 //            pid = programe.getPid();
 //            uid = programe.getUid();
 //            Log.e(Constants.TAG, "1pid = " + pid);
@@ -196,7 +196,7 @@ public class PerformanceService extends Service {
 //            String totalMemory = fomart.format((double) totalMemorySize / 1024);
             String totalMemory = memoryInfo.getTotalMemory();
             //基本信息
-            bw.write(getString(R.string.process_package) + Constants.COMMA + package_name + Constants.LINE_END + getString(R.string.process_pid) + Constants.COMMA + pid
+            bw.write(getString(R.string.process_package) + Constants.COMMA + package_name + Constants.LINE_END + getString(R.string.des) + Constants.COMMA + case_des
                     + Constants.LINE_END + getString(R.string.mem_size) + Constants.COMMA + totalMemory + "MB" + Constants.LINE_END
                     + getString(R.string.android_system_version) + Constants.COMMA + memoryInfo.getSDKVersion() + Constants.LINE_END
                     + getString(R.string.mobile_type) + Constants.COMMA + memoryInfo.getPhoneType() + Constants.LINE_END);

@@ -35,6 +35,7 @@ public class Constants {
     public static final String CRASH = "crash";
 
     public static final String CASE_NAME =  "NAME";
+    public static final String CASE_DES =  "DES";
     public static final String CASE_LIST =  "cese_list";
     public static final String CSV =  ".csv";
     public static final String MAX_MEM =  "max_mem";

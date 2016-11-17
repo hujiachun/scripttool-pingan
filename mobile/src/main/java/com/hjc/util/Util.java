@@ -263,7 +263,7 @@ public class Util {
                 Log.e(Constants.TAG, line);
                 if (line.split("\\s")[0].equals("root")) {
                     if ((line.split("root      ")[1].split("  ")[0]).contains(" ")) {
-                         pidArray.add(Integer.parseInt(line.split("root      ")[1].split("  ")[0].split(" ")[0]));
+                        pidArray.add(Integer.parseInt(line.split("root      ")[1].split("  ")[0].split(" ")[0]));
                     } else {
                         pidArray.add(Integer.parseInt(line.split("root      ")[1].split("  ")[0]));
                     }
@@ -355,6 +355,47 @@ public class Util {
         return date;
     }
 
+
+    public static String getDescriptionLine(String filePath, Context context) throws IOException {
+        InputStreamReader read = null;
+        BufferedReader bufferedReader = null;
+        String desLine = "";
+        File file = new File(filePath);
+        if (file.isFile() && file.exists()) {
+            try {
+                read = new InputStreamReader(new FileInputStream(file), "GBK");
+                bufferedReader = new BufferedReader(read);
+                String lineTxt = null;
+                int number = 0;
+                while ((lineTxt = bufferedReader.readLine()) != null) {
+                    if (number == 1) {
+                        desLine = lineTxt;
+                        break;
+                    }
+                    number++;
+                }
+                read.close();
+                bufferedReader.close();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (read != null) {
+                    read.close();
+                }
+                if (bufferedReader != null) {
+                    bufferedReader.close();
+                }
+            }
+
+        } else {
+            Toast.makeText(context, "result not find", Toast.LENGTH_SHORT).show();
+        }
+        return desLine;
+    }
 
     /**
      * 读取text结果
@@ -455,7 +496,7 @@ public class Util {
             ArrayList<Integer> pids = Util.getlogPid(Constants.LOGCAT);
 //            Log.e(Constants.TAG, "logcat pid= " + pid);
             if (pids != null) {
-                for(int pid : pids){
+                for (int pid : pids) {
                     ShellUtils.execCommand("kill " + pid, true);
                     Log.e(Constants.TAG, "logcat " + pid + " 已结束");
                 }

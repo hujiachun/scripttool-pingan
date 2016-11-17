@@ -15,7 +15,7 @@ import com.hjc.util.Constants;
 public class PerformanceStart extends BroadcastReceiver{
     private SharedPreferences preferences;
     private boolean performanceService;
-    public String name;
+    public String name, description;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -24,8 +24,10 @@ public class PerformanceStart extends BroadcastReceiver{
         performanceService = preferences.getBoolean(Settings.KEY_PERFORMANCE, false);
         if(performanceService){
             name = intent.getStringExtra(Constants.CASE_NAME);
+            description = intent.getStringExtra(Constants.CASE_DES);
             Toast.makeText(context, name + " start", Toast.LENGTH_SHORT).show();
-            preferences.edit().putString(Settings.KEY_CASE, name).commit();
+            preferences.edit().putString(Settings.KEY_CASE, name)
+                    .putString(Constants.CASE_DES, description).commit();
 
             intent.setClass(context, PerformanceService.class);
             context.startService(intent);

@@ -28,25 +28,30 @@ public class PerformaceData {
     public ArrayList indexList;
     public ArrayList<Double> trafficList;
     public ArrayList<Double> realTrafficList;
+    public String description, startTime;
 
     public PerformaceData(String path, Context context) throws IOException {
         dFormat = new DecimalFormat("0.00");
         this.dataList = Util.readCsv(path, context.getApplicationContext());//获取行数据
+        description = Util.getDescriptionLine(path, context.getApplicationContext()).split(",")[1];//获取描述
 //        Log.e(Constants.TAG, "this.dataList:"+this.dataList.size());
         memFloatList = new ArrayList();
         indexList = new ArrayList();
         cpuDoubleList = new ArrayList();
         trafficList = new ArrayList();
         realTrafficList = new ArrayList();
-
-        for( String data : dataList){
+        int i = 0;
+        for (String data : dataList) {
+            if (i == 0) {
+                startTime = data.split(",")[1];
+            }
             memFloatList.add(Float.parseFloat(data.split(",")[2]));//得到内存
-            if(!data.contains(Constants.NA)){
+            if (!data.contains(Constants.NA)) {
                 cpuDoubleList.add(Double.parseDouble(data.split(",")[4].split(Constants.PCT)[0]));//得到CPU
             }
             trafficList.add(Double.parseDouble(data.split(",")[8]));
             indexList.add(data.split(",")[0]);
-
+            i++;
         }
     }
 
@@ -64,7 +69,7 @@ public class PerformaceData {
 
     public float getAverageMem() {
         float sum = 0;
-        for(int i = 0; i < memFloatList.size(); i++){
+        for (int i = 0; i < memFloatList.size(); i++) {
             sum = sum + memFloatList.get(i);
         }
         float n = sum / memFloatList.size();
@@ -87,7 +92,7 @@ public class PerformaceData {
 
     public double getAverageCpu() {
         double sum = 0;
-        for(int i = 0; i < cpuDoubleList.size(); i++){
+        for (int i = 0; i < cpuDoubleList.size(); i++) {
             sum = sum + cpuDoubleList.get(i);
         }
         double n = sum / cpuDoubleList.size();
@@ -96,28 +101,28 @@ public class PerformaceData {
     }
 
 
-    public double getInitTraffic(){
+    public double getInitTraffic() {
         double init_traffic = trafficList.get(0);
         return init_traffic;
     }
 
 
-    public double getTraffic(){
-        double traffic = trafficList.get(trafficList.size()-1) - getInitTraffic();
+    public double getTraffic() {
+        double traffic = trafficList.get(trafficList.size() - 1) - getInitTraffic();
 
         return traffic;
     }
 
 
-    public ArrayList getRealTrafficList(){
+    public ArrayList getRealTrafficList() {
 
-        for (int i=0; i<this.trafficList.size(); i++){
+        for (int i = 0; i < this.trafficList.size(); i++) {
             realTrafficList.add(this.trafficList.get(i) - getInitTraffic());
         }
         return realTrafficList;
     }
 
-    public ArrayList<Float> getMemFloatList(){
+    public ArrayList<Float> getMemFloatList() {
         return this.memFloatList;
     }
 
@@ -125,7 +130,16 @@ public class PerformaceData {
         return this.cpuDoubleList;
     }
 
-    public ArrayList getIndexList() { return  this.indexList;}
+    public ArrayList getIndexList() {
+        return this.indexList;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 
 
+    public String getStartTime() {
+        return startTime;
+    }
 }

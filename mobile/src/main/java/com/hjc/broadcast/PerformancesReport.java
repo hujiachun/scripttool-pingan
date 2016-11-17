@@ -68,12 +68,15 @@ public class PerformancesReport extends BroadcastReceiver {
         final JSONObject performanceJson = new JSONObject();
         for (PerformanceCaseInfo info : items) {
             JSONObject obj_mem = new JSONObject();
+            JSONObject obj_des = new JSONObject();
             JSONObject obj_cpu = new JSONObject();
             JSONObject obj_traffic = new JSONObject();
             JSONObject obj_index = new JSONObject();
             JSONObject obj_ac = new JSONObject();
             JSONObject obj_am = new JSONObject();
             JSONObject obj_tt = new JSONObject();
+//            obj_mem.put("startTime", info.getPerformaceData().getStartTime().toString());
+            obj_des.put("description", info.getPerformaceData().getDescription().toString());
             obj_mem.put("memory", info.getPerformaceData().getMemFloatList().toString());
             obj_cpu.put("cpu", info.getPerformaceData().getCpuDoubleList().toString());
             obj_traffic.put("traffic", info.getPerformaceData().getRealTrafficList().toString());
@@ -82,6 +85,7 @@ public class PerformancesReport extends BroadcastReceiver {
             obj_am.put("averageMem", info.getPerformaceData().getAverageMem());
             obj_tt.put("totalTraffic", info.getPerformaceData().getTraffic());
             JSONArray list = new JSONArray();
+            list.add(obj_des);
             list.add(obj_mem);
             list.add(obj_cpu);
             list.add(obj_traffic);
@@ -91,7 +95,7 @@ public class PerformancesReport extends BroadcastReceiver {
             list.add(obj_tt);
             performanceJson.put(info.getCaseName(), list);
         }
-        Log.e(Constants.TAG, performanceJson.toString());
+//        Log.e(Constants.TAG, performanceJson.toString());
 
 
         ArrayList<String> fpsLine = Util.readText(resultFilePath + "/fps.txt", context);
@@ -107,13 +111,13 @@ public class PerformancesReport extends BroadcastReceiver {
             String[] sp = line.split(",");
             responseJson.put(sp[0], sp[1]);
         }
-        Log.e(Constants.TAG, responseJson.toString());
+//        Log.e(Constants.TAG, responseJson.toString());
 
         Devices devices = new Devices();
         devices.setAndroidVersion(memoryInfo.getSDKVersion());
         devices.setDevicesMemory(memoryInfo.getTotalMemory());
         devices.setDevicesCpu(Cpu.getCpuNum()+ "核CPU");
-        devices.setDevicesName(Build.MODEL + " " + "Android" + Build.VERSION.RELEASE);
+        devices.setDevicesName(Build.MODEL);
         JSONObject devicesJson = new JSONObject();
         devicesJson.put("devicesName", devices.getDevicesName());
         devicesJson.put("devicesCpu", devices.getDevicesCpu());
@@ -133,9 +137,9 @@ public class PerformancesReport extends BroadcastReceiver {
         list.add(obj_fps);
         list.add(obj_response);
         list.add(obj_devices);
-        Log.e(Constants.TAG, "list:" + list.toJSONString());
+        Log.e(Constants.TAG, "最终传输:" + list.toJSONString());
         parameterData = "performanceContent=" + list.toJSONString();
-        Log.e(Constants.TAG, "传输:" + parameterData);
+//        Log.e(Constants.TAG, "传输:" + parameterData);
         appVersion = preferences.getString(Settings.KEY_VERSION, "noversion");
         reportName = appVersion + "_" + TimeUtil.getMMSS() + ".json";
         Writer.writeLine(new File(jsonFile.getAbsolutePath() + "/" + reportName), list.toString(), false);
